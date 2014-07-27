@@ -3,10 +3,14 @@
 <head>
   <title>Halo Word</title>
   <meta charset="utf-8" />
+  <!--
   <link rel="stylesheet" href="http://lab.lepture.com/yue.css/yue.css">
   <link rel="stylesheet" href="release/style/lookup.css">
+  -->
+  <link rel="stylesheet" type="text/css" href="release/style/style.css" />
 </head>
 <body>
+  <!--
   <div class="yue">
     <h1>yue.css</h1>
     <p><strong>yue.css</strong> is a typography stylesheet for readable content. It was
@@ -18,6 +22,7 @@
     <h2>Installation</h2>
     <p>Install with <a href="http://component.io">component(1)</a>:</p>
   </div>
+  -->
 
   <div id="haloword"></div>
 
@@ -40,9 +45,19 @@
   define('db', 'bower_components/db.js/src/db.js');
   define('underscore', 'bower_components/underscore/underscore.js');
 
+  require(['react', 'haloword/pages/main'], function(React, Main) {
+      React.renderComponent(
+          Main(),
+          document.getElementById('haloword')
+      );
+  });
+
+  /*
   require('haloword/lookup-demo', function(demo){
     demo.run();
   });
+  */
+
   </script>
 </body>
 </html>

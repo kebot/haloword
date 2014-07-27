@@ -5,9 +5,11 @@ var gulp = require('gulp'),
     watch = require('gulp-watch'),
     plumber = require('gulp-plumber'),
     notify = require('gulp-notify'),
-    browserSync = require('browser-sync');
+    browserSync = require('browser-sync')
+    less = require('gulp-less');
 
 const scriptsDir = './release/javascript/';
+const styleDir = './release/style/';
 
 // coffeescript or javscript -> es6-module-trans
 gulp.task('default', function() {
@@ -30,6 +32,16 @@ gulp.task('default', function() {
             .pipe(es6ModuleTranspiler({type: 'amd'}))
             .pipe(gulp.dest(scriptsDir));
     });
+
+    watch({
+        //['less/desktop.less', 'less/lookup.css', 'less/style.css']
+        glob: 'less/*.less'
+    }, function(files){
+        files
+        .pipe(plumber({'errorHandler': notify.onError('Error: <%= error.message %>')}))
+        .pipe(less())
+        .pipe(gulp.dest(styleDir));
+    })
 
     browserSync.init([
         'release/**/*.js',
