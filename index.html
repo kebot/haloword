@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Halo Word</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="http://lab.lepture.com/yue.css/yue.css">
+  <link rel="stylesheet" href="release/style/lookup.css">
+</head>
+<body>
+  <div class="yue">
+    <h1>yue.css</h1>
+    <p><strong>yue.css</strong> is a typography stylesheet for readable content. It was
+      created for my blog at first since I always designed a new theme for my
+      blog. But later it becomes the offical stylesheet for yuehu site.</p>
+    <blockquote><p><strong>yue.css</strong> is not a reset stylesheet.</p>
+      </blockquote><p>It is designed for article content, and only article content. If you are
+      looking for a reset css, you are watching the wrong repository.</p>
+    <h2>Installation</h2>
+    <p>Install with <a href="http://component.io">component(1)</a>:</p>
+  </div>
+
+  <div id="haloword"></div>
+
+  <script src="bower_components/ozjs/oz.js"></script>
+  <script>
+  require.config({
+    baseUrl: '/',
+    distUrl:  '/',
+    aliases: {
+      'haloword': 'release/javascript/haloword/',
+      'ui': 'bower_components/jquery-ui/ui/', // jquery ui
+      'jquery': 'bower_components/jquery/src/'
+    }
+  });
+
+  define('react', 'bower_components/react/react.js');
+  define('jquery', 'bower_components/jquery/dist/jquery.js');
+  // define('pouchdb', 'bower_components/pouchdb/dist/pouchdb-nightly.js');
+
+  define('db', 'bower_components/db.js/src/db.js');
+  define('underscore', 'bower_components/underscore/underscore.js');
+
+  require('haloword/lookup-demo', function(demo){
+    demo.run();
+  });
+  </script>
+</body>
+</html>
