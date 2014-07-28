@@ -21,7 +21,9 @@ define ['finish', 'underscore', 'db'], (finish, _, db)->
           keyPath: 'word'
         },
         indexes: {
-          word: {}
+          word: {},
+          created_time: {},
+          last_lookup: {}
         }
       }
     }
