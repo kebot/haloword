@@ -15,7 +15,8 @@ const styleDir = './release/style/';
 gulp.task('default', function() {
     var errorHandler = plumber({'errorHandler': notify.onError('Error: <%= error.message %>')})
     watch({
-        glob: 'src/**/*.coffee'
+        glob: 'src/**/*.coffee',
+        name: 'coffee'
     }, function(files){
         files
             .pipe(plumber({'errorHandler': notify.onError('Error: <%= error.message %>')}))
@@ -35,11 +36,14 @@ gulp.task('default', function() {
 
     watch({
         //['less/desktop.less', 'less/lookup.css', 'less/style.css']
-        glob: 'less/*.less'
+        glob: 'less/**/*.less',
+        name: 'less'
     }, function(files){
-        files
+        gulp.src(['less/*.less'])
         .pipe(plumber({'errorHandler': notify.onError('Error: <%= error.message %>')}))
-        .pipe(less())
+        .pipe(less({
+            paths: [__dirname + '/bower_components/bootstrap/less']
+        }))
         .pipe(gulp.dest(styleDir));
     })
 
