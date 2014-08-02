@@ -1,0 +1,25 @@
+{
+  "name": "haloword",
+  "version": "0.0.0",
+  "homepage": "https://github.com/kebot/haloword",
+  "authors": [
+    "Keith Yao <i@yaofur.com>"
+  ],
+  "license": "ISC",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "react": "~0.11.1",
+    "jquery": "~2.1.1",
+    "ozjs": "~2.6.4",
+    "underscore": "~1.6.0",
+    "backbone": "~1.1.2",
+    "db.js": "~0.9.0"
+  }
+}

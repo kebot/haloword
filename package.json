@@ -1,0 +1,30 @@
+{
+  "name": "haloword",
+  "version": "0.0.0",
+  "description": "haloword",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kebot/haloword.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kebot/haloword/issues"
+  },
+  "homepage": "https://github.com/kebot/haloword",
+  "dependencies": {
+    "browser-sync": "^1.3.2",
+    "event-stream": "^3.1.7",
+    "gulp": "^3.8.6",
+    "gulp-coffee": "^2.1.1",
+    "gulp-less": "^1.3.3",
+    "gulp-notify": "^1.4.0",
+    "gulp-plumber": "^0.6.4",
+    "gulp-stream": "0.0.2",
+    "gulp-watch": "^0.6.9"
+  }
+}
