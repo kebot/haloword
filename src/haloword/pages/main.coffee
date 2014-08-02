@@ -1,9 +1,10 @@
 define [
   'react',
   'haloword/dicts/youdao',
+  'haloword/dicts/webster',
   'haloword/storage',
   'underscore'
-], (React, YoudaoDef,  db, _) ->
+], (React, YoudaoDef, WebSterDef, db, _) ->
   {
     header, div, hr, p, section, ul, li, a, form, input, span, button
   } = React.DOM
@@ -48,11 +49,16 @@ define [
           clear: 'both'
           marginTop: 80
         }),
-        (YoudaoDef {word: this.props.currentWord})
+        (YoudaoDef {word: this.props.currentWord}),
+        (WebSterDef {word: this.props.currentWord}),
         (div id: 'bubble', null)
       )
 
   Asite = React.createClass
+
+    focusSearchInput: ->
+      this.refs.searchInput.getDOMNode().focus()
+
     render: ->
       (section id: 'side',
         (li
@@ -62,14 +68,21 @@ define [
             e.preventDefault()
             this.props.onSelectWord('halo:welcome')
           , 'Halo Word')
-        )
+        ),
         (li id: 'search',
-          (form id: 'search_form',
+          (form
+            id: 'search_form',
+            onSubmit: (e) =>
+              e.preventDefault()
+              word = this.refs.searchInput.state.value.trim()
+              return this.props.onSelectWord(word)
             (input
               id: 'search_field',
               type: 'search',
+              name: 'word',
+              ref: 'searchInput',
+              label: 'word',
               placeholder: 'Enter a word...',
-              results: '0',
               autofocus: true
             )
           )
@@ -105,6 +118,8 @@ define [
         .fail (msg) ->
           console.error msg
 
+      window.onkeydown = this.onKeyDown.bind(this)
+
     onSelectWord: (wordDict) ->
       if _.isObject wordDict
         word = wordDict.word
@@ -117,9 +132,18 @@ define [
     onRemoveWord: (word) ->
       # hello - world
 
+    onKeyDown: (key) ->
+      if document.activeElement.tagName not in ['TEXTAREA', 'INPUT']
+        if (
+          !key.ctrlKey and !key.metaKey and key.which >= 65 and key.which <= 90
+        ) or ((key.ctrlKey or key.metaKey) and key.which == 86)
+          this.refs.aside.focusSearchInput()
+
     render: ->
-      (div className: 'app',
+      (div
+        className: 'app',
         (Asite
+          ref: 'aside',
           onSelectWord: this.onSelectWord,
           words: this.state.words
           currentWord: this.state.currentWord
