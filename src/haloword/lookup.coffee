@@ -1,10 +1,13 @@
-define ['react', 'jquery', 'ui/draggable', 'haloword/storage'], (
+define ['react', 'jquery', 'ui/draggable', 'haloword/storage', 'haloword/dicts/youdao'], (
   React,
   $,
   draggable,
-  storage
+  storage,
+  YouDaoDefination
 )->
-  {div, span, a} = React.DOM
+  {
+    div, span, a, p, br
+  } = React.DOM
 
   # Lookup box
   LookupBox = React.createClass
@@ -12,11 +15,14 @@ define ['react', 'jquery', 'ui/draggable', 'haloword/storage'], (
 
     getDefaultProps: ->
       {
-        word: 'foo'
+        word: 'foo',
+        x: 0,
+        y: 0
       }
 
     getInitialState: ->
       display: false
+      loading: true
 
     componentDidMount: ->
       $(this.getDOMNode()).draggable({
@@ -25,7 +31,9 @@ define ['react', 'jquery', 'ui/draggable', 'haloword/storage'], (
 
     render: ->
       (div id: 'haloword-lookup', className: 'ui-widget-content', style: {
-          display: if this.state.display then 'none' else 'block'
+          display: if this.state.display then 'none' else 'block',
+          top: this.props.y,
+          left: this.props.x
         },
         (div id: 'haloword-title',
           (span id: 'haloword-word', this.props.word),
@@ -33,12 +41,25 @@ define ['react', 'jquery', 'ui/draggable', 'haloword/storage'], (
           (div id: 'haloword-control-container',
             (a id: 'haloword-add', className: 'haloword-button', title: '加入单词表'),
             (a id: 'haloword-remove', className: 'haloword-button', title: '移出单词表'),
-            (a id: 'haloword-open', className: 'haloword-button', title: '查看单词详细释义'),
+            (a
+              id: 'haloword-open',
+              href: chrome.extension.getURL('main.html#' + this.props.word),
+              target: '_blank',
+              className: 'haloword-button',
+              title: '查看单词详细释义'
+            ),
             (a id: 'haloword-close', className: 'haloword-button', title: '关闭查询窗')
           )
+        ),
+        (br style: {clear: 'both'}),
+        (YouDaoDefination
+          id: 'halowrod-content',
+          word: this.props.word,
+          miniui: true
         )
       )
 
+  # util functions
   getSelection = ->
     selection = window.getSelection()
     if not selection
@@ -47,21 +68,29 @@ define ['react', 'jquery', 'ui/draggable', 'haloword/storage'], (
           selection = this.contentDocument.getSelection()
         if selection
           return false
+
     return selection
 
-  return {
-    run: ->
-      root = document.getElementById('haloword')
+  {
+    setup: (root) ->
+      if not root
+        root = document.getElementById('haloword-lookup-wrapper')
 
-      $('body').on('mouseup', ->
+      $('body').on('mouseup', (e) ->
         selection = getSelection()
         if selection.type != 'Range'
           return
         word = $.trim(selection.toString())
 
+        windowWidth = $(window).outerWidth()
+        halowordWidth = $('#haloword-lookup').outerWidth()
+        left = Math.min(windowWidth + window.scrollX - halowordWidth, e.pageX - $('body').offset().left)
+
         React.renderComponent(
           (LookupBox {
-            word: word
+            word: word,
+            x: left,
+            y: e.pageY
           })
         , root)
 
@@ -71,6 +100,4 @@ define ['react', 'jquery', 'ui/draggable', 'haloword/storage'], (
           context: selection.focusNode.data
         })
       )
-
-  }
-
+    }

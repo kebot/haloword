@@ -9,6 +9,8 @@ define [
     header, div, hr, p, section, ul, li, a, form, input, span, button
   } = React.DOM
 
+  VERSION = '7.0'
+
   # HaloWelcome
 
   Main = React.createClass
@@ -103,10 +105,14 @@ define [
         )
       )
 
+  buildins = ['creator', 'credits', 'io', 'loadings', 'me', 'notfound',
+              'version', 'welcome']
+
   return React.createClass
     getInitialState: ->
       currentWord: 'halo:welcome'
       words: []
+      buildinHTML: null
 
     componentDidMount: ->
       db.words.query('last_lookup')
@@ -119,15 +125,26 @@ define [
           console.error msg
 
       window.onkeydown = this.onKeyDown.bind(this)
+      this.onSelectWord(this.state.currentWord)
 
     onSelectWord: (wordDict) ->
       if _.isObject wordDict
         word = wordDict.word
       else if _.isString wordDict
         word = wordDict
-      this.setState({
-        currentWord: word
-      })
+
+      if word.substring(0, 5) == 'halo:'
+        page = word.substring(5)
+        $.get('release/builtin/' + page + '.html', (html) =>
+          this.setState({
+            'buildinHTML': html.replace(/__VERSION__/g, '<a href="#halo:version">' + VERSION + '</a>')
+          })
+        )
+      else
+        this.setState({
+          buildinHTML: null,
+          currentWord: word
+        })
 
     onRemoveWord: (word) ->
       # hello - world
@@ -148,6 +165,13 @@ define [
           words: this.state.words
           currentWord: this.state.currentWord
         ),
-        (Main currentWord: this.state.currentWord)
+        if this.state.currentWord.substring(0, 5) == 'halo:'
+          (section id: 'main',
+            (header null, (span id: 'wordtitle', this.state.title)),
+            (div id: 'worddef', dangerouslySetInnerHTML: {__html: this.state.buildinHTML})
+          )
+        else
+          (Main currentWord: this.state.currentWord)
+
       )
 

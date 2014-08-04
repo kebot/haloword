@@ -1,6 +1,7 @@
 define ['react', 'jquery'], (React, $) ->
   {div, a, p, span, sup, ol, li, audio} = React.DOM
 
+
   React.createClass
     displayName: 'WebsterDiff',
 
@@ -97,7 +98,9 @@ define ['react', 'jquery'], (React, $) ->
         )
 
     render: ->
-      console.log this.state.entries
+
+      if not this.props.word
+        return (div id: 'worddef')
 
       (div id: 'worddef',
         (for entry in this.state.entries
@@ -121,11 +124,14 @@ define ['react', 'jquery'], (React, $) ->
               )
             ),
             (ol null, (for def in entry.def
-              (li dangerouslySetInnerHTML: {__html: def.content})
-              if def.sub?.length
-                (ol null, (for sub in def.sub
-                  (li dangerouslySetInnerHTML: {__html: sub.content})
-                ))
+              (li null,
+                (div dangerouslySetInnerHTML: {__html: def.content}),
+                (if def.sub?.length
+                  (ol null, (for sub in def.sub
+                    (li dangerouslySetInnerHTML: {__html: sub.content})
+                  ))
+                )
+              )
             ))
           )
         ),
