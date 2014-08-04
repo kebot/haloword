@@ -1,5 +1,5 @@
 var gulp = require('gulp'),
-    es6ModuleTranspiler = require('gulp-es6-module-transpiler'),
+    // es6ModuleTranspiler = require('gulp-es6-module-transpiler'),
     coffee = require('gulp-coffee'),
     es = require('event-stream'),
     watch = require('gulp-watch'),
