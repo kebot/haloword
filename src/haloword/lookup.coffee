@@ -51,7 +51,6 @@ define ['react', 'jquery', 'ui/draggable', 'haloword/storage', 'haloword/dicts/y
             (a id: 'haloword-close', className: 'haloword-button', title: '关闭查询窗')
           )
         ),
-        (br style: {clear: 'both'}),
         (YouDaoDefination
           id: 'halowrod-content',
           word: this.props.word,
@@ -90,14 +89,17 @@ define ['react', 'jquery', 'ui/draggable', 'haloword/storage', 'haloword/dicts/y
           (LookupBox {
             word: word,
             x: left,
-            y: e.pageY
+            y: e.pageY,
+            onLookup: (info) ->
+              # only save it's a word
+              storage.saveRecord({
+                word: word,
+                url: location.href,
+                context: selection.focusNode.data
+              })
           })
         , root)
 
-        storage.saveRecord({
-          word: word,
-          url: location.href,
-          context: selection.focusNode.data
-        })
+
       )
     }
