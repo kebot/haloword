@@ -1,4 +1,12 @@
-define ['react', 'jquery', 'ui/draggable', 'haloword/storage', 'haloword/dicts/youdao'], (
+define [
+  'haloword/config',
+  'react',
+  'jquery',
+  'ui/draggable',
+  'haloword/storage',
+  'haloword/dicts/youdao'
+], (
+  config,
   React,
   $,
   draggable,
@@ -30,25 +38,41 @@ define ['react', 'jquery', 'ui/draggable', 'haloword/storage', 'haloword/dicts/y
       })
 
     render: ->
-      (div id: 'haloword-lookup', className: 'ui-widget-content', style: {
+      (div
+        id: 'haloword-lookup',
+        className: 'ui-widget-content',
+        style: {
           display: if this.state.display then 'none' else 'block',
           top: this.props.y,
           left: this.props.x
         },
         (div id: 'haloword-title',
           (span id: 'haloword-word', this.props.word),
-          (a href: '#', id: 'haloword-pron', className: 'haloword-button', title: '发音'),
+          (a
+            href: '#',
+            id: 'haloword-pron',
+            className: 'haloword-button',
+            title: '发音'),
           (div id: 'haloword-control-container',
-            (a id: 'haloword-add', className: 'haloword-button', title: '加入单词表'),
-            (a id: 'haloword-remove', className: 'haloword-button', title: '移出单词表'),
+            (a
+              id: 'haloword-add',
+              className: 'haloword-button',
+              title: '加入单词表'),
+            (a
+              id: 'haloword-remove',
+              className: 'haloword-button',
+              title: '移出单词表'),
             (a
               id: 'haloword-open',
-              href: chrome.extension.getURL('main.html#' + this.props.word),
+              href: config.getURL('main.html#' + this.props.word),
               target: '_blank',
               className: 'haloword-button',
               title: '查看单词详细释义'
             ),
-            (a id: 'haloword-close', className: 'haloword-button', title: '关闭查询窗')
+            (a
+              id: 'haloword-close',
+              className: 'haloword-button',
+              title: '关闭查询窗')
           )
         ),
         (YouDaoDefination
@@ -76,6 +100,11 @@ define ['react', 'jquery', 'ui/draggable', 'haloword/storage', 'haloword/dicts/y
         root = document.getElementById('haloword-lookup-wrapper')
 
       $('body').on('mouseup', (e) ->
+        if config.disable_querybox or (
+          not e.ctrlKey and not e.metaKey
+        )
+          return
+
         selection = getSelection()
         if selection.type != 'Range'
           return
@@ -83,13 +112,19 @@ define ['react', 'jquery', 'ui/draggable', 'haloword/storage', 'haloword/dicts/y
 
         windowWidth = $(window).outerWidth()
         halowordWidth = $('#haloword-lookup').outerWidth()
-        left = Math.min(windowWidth + window.scrollX - halowordWidth, e.pageX - $('body').offset().left)
+
+        rect = selection.getRangeAt(0).getBoundingClientRect()
+
+        left = Math.min(
+          windowWidth + window.scrollX - halowordWidth,
+          e.pageX - $('body').offset().left
+        )
 
         React.renderComponent(
           (LookupBox {
             word: word,
-            x: left,
-            y: e.pageY,
+            x: rect.left + rect.width / 2,
+            y: rect.bottom + 10,
             onLookup: (info) ->
               # only save it's a word
               storage.saveRecord({
@@ -99,7 +134,5 @@ define ['react', 'jquery', 'ui/draggable', 'haloword/storage', 'haloword/dicts/y
               })
           })
         , root)
-
-
       )
     }

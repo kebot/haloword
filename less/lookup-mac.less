@@ -1,39 +1,50 @@
 // @import "./lookup.less";
+// copy of osx dictionary app lookup ui
+
+/*@bgc: RGBA(232, 228, 221, 1);*/
+@bgc: RGBA(239, 239, 239, 1);
+@haloword-width: 280px;
+@haloword-padding: 10px;
 
 #haloword-lookup {
-  width: 280px;
-  min-height: 220px;
-
-  padding: 10px ;
-
+  width: @haloword-width;
+  margin-left: -0.5 * (@haloword-width + (2 * @haloword-padding));
+  min-height: 100px;
+  padding: @haloword-padding;
   transition: .1s;
-  
   position: fixed;
   z-index: 2147483647 !important;
   top: 100px;
   left: 40%;
-  
-  background-color: rgba(241, 241, 241, .7);
+
+  // typo
+  font-size: 12px;
+  font-family: 'Baskerville', arial,sans-serif;
   border-radius: 5px;
-  border: 1px rgb(202, 202, 202);
-  box-shadow: 0px 0px 22px 11px rgba(94, 94, 94, 0.3);
-
-  // font-family: 'Baskerville', arial,sans-serif;
-
-  font: normal 16px/1.70 "TIBch","Classic Grotesque W01","Helvetica Neue",Arial,"Hiragino Sans GB","STHeiti","Microsoft YaHei","WenQuanYi Micro Hei",SimSun,sans-serif;
+  // font setting from Type Is Beautiful
+  // font: normal 16px/1.70 "TIBch","Classic Grotesque W01","Helvetica Neue",Arial,"Hiragino Sans GB","STHeiti","Microsoft YaHei","WenQuanYi Micro Hei",SimSun,sans-serif;
 
   &:before {
-    content: '';
+    @trangle-size: 10px;
+
+    content: ' ';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    position: absolute;
-    background: inherit;
-    filter: blur(10px);
-    filter: url(#blur);
-    z-index: -1;
+    top: -10px;
+    left: 50%;
+    margin-left: -1 * @trangle-size;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 @trangle-size @trangle-size @trangle-size;
+    border-color: transparent transparent @bgc transparent;
+  }
+
+  &, &.before {
+    color: RGBA(16, 16, 16, 1);
+    background-color: @bgc;
+    border-radius: 5px;
+    border: 1px rgb(202, 202, 202);
+    box-shadow: 0px 0px 22px 11px rgba(94, 94, 94, 0.3);
   }
 }
 
@@ -41,14 +52,15 @@
   transition: none;
 }
 
-
 #haloword-word {
   font-size: xx-large;
-
 }
 
-#halowrod-title {
-
+#haloword-title {
 }
 
-
+#halowrod-content {
+  p {
+    line-height: 12px;
+  }
+}
