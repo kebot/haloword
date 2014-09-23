@@ -79,6 +79,16 @@ define ['finish', 'underscore', 'db'], (finish, _, db)->
         else
           console.log('you have already record this word!')
 
+    server.delWord = (word) ->
+      # first of all, you need delete all records related to the word
+      server.records.query()
+        .filter('word', word)
+        .execute()
+        .done (r) ->
+          ids = _.map r, (value) ->
+            server.records.remove(value.id).then (key)-> console.debug('[delete record]', key)
+      return server.words.remove(word)
+
     finish(server)
   )
 

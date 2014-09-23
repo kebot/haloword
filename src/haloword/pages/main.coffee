@@ -1,10 +1,11 @@
 define [
   'react',
+  'haloword/cards/memory', 
   'haloword/dicts/youdao',
   'haloword/dicts/webster',
   'haloword/storage',
   'underscore'
-], (React, YoudaoDef, WebSterDef, db, _) ->
+], (React, MemoryCard, YoudaoDef, WebSterDef, db, _) ->
   {
     header, div, hr, p, section, ul, li, a, form, input, span, button
   } = React.DOM
@@ -51,12 +52,15 @@ define [
           clear: 'both'
           marginTop: 80
         }),
+        (MemoryCard {word: this.props.currentWord}),
         (YoudaoDef {word: this.props.currentWord}),
         (WebSterDef {word: this.props.currentWord}),
         (div id: 'bubble', null)
       )
 
-  Asite = React.createClass
+  Aside = React.createClass
+
+    displayName: 'HalowordAside'
 
     focusSearchInput: ->
       this.refs.searchInput.getDOMNode().focus()
@@ -98,7 +102,7 @@ define [
               (div
                 className: 'delete',
                 title: 'Remove from word list'
-                onClick: -> console.log 'delete :', dict
+                onClick: this.props.onRemoveWord.bind(null, dict)
               ),
               dict.word
             )
@@ -146,8 +150,15 @@ define [
           currentWord: word
         })
 
-    onRemoveWord: (word) ->
+    onRemoveWord: (dict, event) ->
       # hello - world
+      # dict: {word: '', ...}
+      self = this
+      db.delWord(dict.word).then (key) ->
+        self.setState 'words': _.reject(
+          self.state.words,
+          (w) -> dict.word == w.word
+        )
 
     onKeyDown: (key) ->
       if document.activeElement.tagName not in ['TEXTAREA', 'INPUT']
@@ -159,9 +170,10 @@ define [
     render: ->
       (div
         className: 'app',
-        (Asite
+        (Aside
           ref: 'aside',
           onSelectWord: this.onSelectWord,
+          onRemoveWord: this.onRemoveWord,
           words: this.state.words
           currentWord: this.state.currentWord
         ),
