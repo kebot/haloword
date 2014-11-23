@@ -35,11 +35,16 @@
   define('db', 'bower_components/db.js/src/db.js');
   define('underscore', 'bower_components/underscore/underscore.js');
 
+  /*
   require(['react', 'haloword/pages/main'], function(React, Main) {
       React.renderComponent(
           Main(),
           document.getElementById('haloword')
       );
+  }); */
+
+  require(['react', 'haloword/pages/setting'], function(React, ConfigPage) {
+    React.renderComponent(ConfigPage(), document.getElementById('haloword'));
   });
 
   require([

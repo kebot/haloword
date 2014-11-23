@@ -1,6 +1,6 @@
 define [
   'react',
-  'haloword/cards/memory', 
+  'haloword/cards/memory',
   'haloword/dicts/youdao',
   'haloword/dicts/webster',
   'haloword/storage',
